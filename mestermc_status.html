@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>MesterMC Szerver Státusz</title>
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 50px;
+    }
+    h1 {
+      color: #00ff88;
+    }
+    #status {
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+    .footer {
+      margin-top: 50px;
+      font-size: 0.9em;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎮 MesterMC Szerver Státusz</h1>
+  <div id="status">Lekérdezés...</div>
+
+  <script>
+    async function fetchStatus() {
+      try {
+        const response = await fetch("https://api.mcstatus.io/v2/status/java/play.mestermc.hu");
+        const data = await response.json();
+
+        const statusDiv = document.getElementById("status");
+        if (data.online) {
+          statusDiv.innerHTML = `
+            ✅ <strong>Online</strong><br>
+            👥 Játékosok: ${data.players.online}/${data.players.max}<br>
+            🧠 MOTD: ${data.motd.clean}<br>
+            ⚡ Ping: ${data.latency} ms
+          `;
+        } else {
+          statusDiv.innerHTML = "❌ A szerver offline.";
+        }
+      } catch (error) {
+        document.getElementById("status").innerText = "⚠️ Hiba történt a lekérdezés során.";
+      }
+    }
+
+    fetchStatus();
+    setInterval(fetchStatus, 30000); // Frissítés 30 mp-enként
+  </script>
+
+  <div class="footer">Készítette: ChatGPT a Joshua kérésére 😎</div>
+</body>
+</html>
